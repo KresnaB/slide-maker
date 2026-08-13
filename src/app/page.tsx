@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { MarkdownUploader } from '@/components/upload/MarkdownUploader';
@@ -47,23 +47,22 @@ export default function Home() {
 
   // Styling & Preferences State
   const [currentThemeId, setCurrentThemeId] = useState<ThemeId>('neobrutalism');
-  const [currentAspectRatioId, setCurrentAspectRatioId] = useState<AspectRatioId>('1:1');
+  const [currentAspectRatioId, setCurrentAspectRatioId] = useState<AspectRatioId>('3:4-tiktok');
   const [customWidth, setCustomWidth] = useState<number>(1080);
-  const [customHeight, setCustomHeight] = useState<number>(1080);
+  const [customHeight, setCustomHeight] = useState<number>(1440);
   const [watermark, setWatermark] = useState<WatermarkConfig>({
     enabled: true,
-    text: 'kawan.toefl',
+    text: 'Kawan TOEFL',
     x: 50,
     y: 92,
-    fontSize: 18,
-    opacity: 0.85,
-    color: '#000000',
+    fontSize: 22,
+    opacity: 0.9,
+    color: '#1A1A2E',
   });
 
   // Modal & History state
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [history, setHistory] = useState<SlideshowProject[]>([]);
-  const canvasRef = useRef<HTMLDivElement>(null);
 
   // Load preferences & history on mount
   useEffect(() => {
@@ -337,7 +336,6 @@ export default function Home() {
                     onSelectElement={setSelectedElementId}
                     onUpdateElementPosition={handleUpdateElementPosition}
                     onUpdateWatermarkPosition={(x, y) => updateWatermark({ ...watermark, x, y })}
-                    canvasRef={canvasRef}
                   />
                 )}
               </div>
@@ -399,7 +397,9 @@ export default function Home() {
         onClose={() => setIsExportModalOpen(false)}
         slides={slides}
         activeSlideIndex={activeSlideIndex}
-        canvasRef={canvasRef}
+        theme={activeTheme}
+        aspectRatio={activeRatio}
+        watermark={watermark}
       />
 
       {/* App Footer */}

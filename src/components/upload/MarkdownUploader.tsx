@@ -141,7 +141,7 @@ export const MarkdownUploader: React.FC<MarkdownUploaderProps> = ({
           disabled={!markdown.trim()}
           className="neo-btn neo-btn-green w-full py-4 px-6 text-base sm:text-lg font-black tracking-wide shadow-[5px_5px_0_#000] hover:shadow-[7px_7px_0_#000] cursor-pointer mt-2"
         >
-          <FiZap className="text-xl" /> Buat Slideshow Konten Sekarang 🚀
+          <FiZap className="text-xl" /> Buat Slideshow Konten Sekarang
         </button>
       </div>
     </div>

@@ -1,24 +1,27 @@
-export const DEFAULT_TEMPLATE_MARKDOWN = `# Rahasia Kuasai TOEFL Score 550+ 🚀
-## Panduan Ringkas & Praktis untuk Pemula
+export const DEFAULT_TEMPLATE_MARKDOWN = `# Question of the Day
+## TOEFL ITP | Structure & Written Expression
 ---
-# 1. Kuasai Structure & Written Expression 📝
-- **Fokus pada Subject & Verb**: Pastikan setiap kalimat memiliki subjek dan kata kerja yang jelas.
-- **Waspada Trap Words**: Hati-hati dengan *appositive*, *present participle*, dan *past participle*.
-- **Latihan Rutin**: Minimal 20 soal setiap hari untuk mengasah insting grammar Anda.
+# Soal Hari Ini
+The professor, along with his students, ___ to the conference every year.
+
+- A. go
+- B. goes
+- C. going
+- D. have gone
 ---
-# 2. Listening Comprehension Strategy 🎧
-- **Fokus pada Pembicara Kedua**: Di Short Conversation (Part A), kunci jawaban 80% ada di pembicara kedua.
-- **Cari Sinonim (Restatement)**: Jawaban benar hampir selalu merupakan bentuk frasa ulang dari kata kunci.
-- **Jangan Biarkan Kosong**: Tidak ada minus point di TOEFL!
+# Tips Ngerjain
+- Coret frasa di antara koma, itu cuma penghias kalimat
+- Cari subject asli: tunggal atau jamak?
+- Verb harus sepakat sama subject-nya
 ---
-# 3. Reading Comprehension Speed Test 📖
-- **Gunakan Teknik Skimming & Scanning**: Jangan baca seluruh bacaan word-by-word.
-- **Jawab Main Idea Dulu**: Temukan topik utama di kalimat pertama setiap paragraf.
-- **Vocabulary in Context**: Tebak arti kata berdasarkan konteks kalimat sekitarnya.
+# Jawabannya: B
+- Subject "The professor" itu tunggal, jadi verb yang cocok: goes
+- "Along with his students" cuma tambahan, subject tetap si professor
 ---
-# Siap Dapatkan Skor TOEFL Impianmu? 🎯
-- Save & Share postingan ini ke teman seperjuanganmu!
-- Follow **@kawan.toefl** untuk info & tips TOEFL harian gratis!
+# Lanjut Latihan?
+- Latihan ribuan soal lainnya GRATIS di Kawan TOEFL
+- Soal baru tiap hari, skor langsung + pembahasan instan
+- Tryout TOEFL ITP gratis
 `;
 
 export function downloadMarkdownTemplate() {

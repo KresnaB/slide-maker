@@ -11,7 +11,7 @@ export const Footer: React.FC = () => {
           <span className="bg-[#FEF08A] text-black px-2 py-0.5 rounded font-black border border-black">
             SLIDE MAKER
           </span>
-          <span>— Pembuat Slideshow Gambar Media Sosial dari File Markdown</span>
+          <span>Pembuat Slideshow Gambar Media Sosial dari File Markdown</span>
         </div>
 
         <div className="flex items-center gap-4 text-xs text-gray-300">

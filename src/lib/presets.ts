@@ -2,6 +2,15 @@ import { AspectRatioPreset, ThemeConfig } from '@/types';
 
 export const ASPECT_RATIOS: AspectRatioPreset[] = [
   {
+    id: '3:4-tiktok',
+    name: 'TikTok Photo Carousel',
+    category: 'TikTok',
+    ratio: 3 / 4,
+    width: 1080,
+    height: 1440,
+    label: '3:4 (1080 x 1440)',
+  },
+  {
     id: '1:1',
     name: 'Instagram Post',
     category: 'Instagram',
@@ -18,15 +27,6 @@ export const ASPECT_RATIOS: AspectRatioPreset[] = [
     width: 1080,
     height: 1920,
     label: '9:16 (1080 x 1920)',
-  },
-  {
-    id: '3:4-tiktok',
-    name: 'TikTok Photo Carousel',
-    category: 'TikTok',
-    ratio: 3 / 4,
-    width: 1080,
-    height: 1440,
-    label: '3:4 (1080 x 1440)',
   },
   {
     id: '9:16-story',
@@ -84,21 +84,35 @@ export const ASPECT_RATIOS: AspectRatioPreset[] = [
   },
 ];
 
+// Palette pastel khas konten Kawan TOEFL (rotasi per slide)
+export const PASTEL_BG_COLORS = [
+  '#FF6B6B', // merah pastel
+  '#4ECDC4', // teal
+  '#FFD93D', // kuning
+  '#A8E6CF', // hijau mint
+  '#DDA0DD', // ungu pastel
+  '#87CEEB', // biru langit
+];
+
+// Warna dasar brand neobrutalism Kawan TOEFL
+export const NEO_DARK = '#1A1A2E';
+export const NEO_BG = '#F5F0E8';
+
 export const THEMES: Record<string, ThemeConfig> = {
   neobrutalism: {
     id: 'neobrutalism',
     name: 'Neobrutalism',
-    description: 'Bold black borders, vibrant pop colors & hard shadows',
-    fontFamilyHeading: 'var(--font-neo-heading, "Plus Jakarta Sans", sans-serif)',
-    fontFamilyBody: 'var(--font-neo-body, "Inter", sans-serif)',
-    bgStyle: '#FEF08A', // Yellow pop
+    description: 'Gaya khas Kawan TOEFL: border tebal 6px, warna pastel pop & shadow keras',
+    fontFamilyHeading: 'var(--font-neo, "Space Grotesk", sans-serif)',
+    fontFamilyBody: 'var(--font-neo, "Space Grotesk", sans-serif)',
+    bgStyle: '#FF6B6B',
     cardStyle: '#FFFFFF',
-    textColor: '#000000',
-    headingColor: '#000000',
-    accentColor: '#FF6B6B',
-    borderStyle: '4px solid #000000',
-    shadowStyle: '6px 6px 0px #000000',
-    previewColor: '#FEF08A',
+    textColor: '#1A1A2E',
+    headingColor: '#1A1A2E',
+    accentColor: '#FFD93D',
+    borderStyle: '6px solid #1A1A2E',
+    shadowStyle: '12px 12px 0px #1A1A2E',
+    previewColor: '#FF6B6B',
   },
   brutalism: {
     id: 'brutalism',

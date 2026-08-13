@@ -11,6 +11,13 @@ interface ColorPickerProps {
 const QUICK_PRESETS = [
   '#000000',
   '#FFFFFF',
+  '#1A1A2E',
+  '#FF6B6B',
+  '#4ECDC4',
+  '#FFD93D',
+  '#A8E6CF',
+  '#DDA0DD',
+  '#87CEEB',
   '#FF71CE',
   '#01CDFE',
   '#FEF08A',

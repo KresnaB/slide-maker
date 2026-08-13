@@ -29,7 +29,7 @@ export const PropertiesPanel: React.FC<PropertiesPanelProps> = ({
   if (!selectedElement) {
     return (
       <div className="neo-card p-4 bg-white mb-4 text-center text-gray-600 text-xs font-semibold leading-relaxed">
-        💡 Klik salah satu elemen (Teks, Icon, Shape) pada canvas slide untuk mengubah ukurannya, warna, atau posisinya.
+        Klik salah satu elemen (Teks, Icon, Shape) pada canvas slide untuk mengubah ukurannya, warna, atau posisinya.
       </div>
     );
   }

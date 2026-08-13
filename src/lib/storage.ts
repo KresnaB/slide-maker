@@ -13,15 +13,15 @@ export interface UserPreferences {
 
 export const DEFAULT_PREFERENCES: UserPreferences = {
   defaultTheme: 'neobrutalism',
-  defaultAspectRatio: '1:1',
+  defaultAspectRatio: '3:4-tiktok',
   watermark: {
     enabled: true,
-    text: 'kawan.toefl',
+    text: 'Kawan TOEFL',
     x: 50, // center horizontal %
     y: 92, // bottom vertical %
-    fontSize: 18,
-    opacity: 0.85,
-    color: '#000000',
+    fontSize: 22,
+    opacity: 0.9,
+    color: '#1A1A2E',
   },
 };
 

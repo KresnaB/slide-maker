@@ -1,5 +1,27 @@
 import type { Metadata } from "next";
+import { Space_Grotesk, Inter, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-neo",
+  display: "swap",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-app-ui",
+  display: "swap",
+});
+
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  weight: ["500", "700", "800"],
+  variable: "--font-app",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: "SlideMaker - Generator Slideshow Konten Media Sosial",
@@ -13,15 +35,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;700;800&family=Space+Grotesk:wght@600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
-      <body>{children}</body>
+      <body
+        className={`${spaceGrotesk.variable} ${inter.variable} ${plusJakarta.variable}`}
+      >
+        {children}
+      </body>
     </html>
   );
 }

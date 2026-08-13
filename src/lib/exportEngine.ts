@@ -3,46 +3,65 @@ import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { ExportFormat } from '@/types';
 
+export interface ExportOptions {
+  quality?: number;
+  pixelRatio?: number;
+}
+
 export async function exportSlideElementToDataUrl(
   element: HTMLElement,
   format: ExportFormat,
-  quality = 0.95
+  options: ExportOptions = {}
 ): Promise<string> {
-  const options = {
+  const { quality = 0.95, pixelRatio = 2 } = options;
+
+  const base = {
     quality,
     cacheBust: true,
-    pixelRatio: 2, // High resolution rendering for sharp social media graphics
+    pixelRatio,
   };
 
   switch (format) {
     case 'svg':
-      return await toSvg(element, options);
+      return await toSvg(element, { ...base, pixelRatio: undefined });
     case 'jpeg':
-      return await toJpeg(element, options);
+      return await toJpeg(element, base);
     case 'png':
     default:
-      return await toPng(element, options);
+      return await toPng(element, base);
   }
 }
 
 export async function exportSingleSlide(
   element: HTMLElement,
   filename: string,
-  format: ExportFormat
+  format: ExportFormat,
+  pixelRatio = 2
 ) {
-  const dataUrl = await exportSlideElementToDataUrl(element, format);
+  const dataUrl = await exportSlideElementToDataUrl(element, format, { pixelRatio });
   const link = document.createElement('a');
   link.download = `${filename}.${format === 'jpeg' ? 'jpg' : format}`;
   link.href = dataUrl;
   link.click();
 }
 
+export interface SlideExportItem {
+  element: HTMLElement;
+  filename: string;
+}
+
+export interface BatchExportOptions {
+  zipName?: string;
+  pixelRatio?: number;
+  onProgress?: (current: number, total: number) => void;
+}
+
 export async function exportAllSlidesToZip(
-  slideElements: { element: HTMLElement; filename: string }[],
+  slideElements: SlideExportItem[],
   format: ExportFormat,
-  zipName = 'slideshow-konten.zip',
-  onProgress?: (current: number, total: number) => void
+  options: BatchExportOptions = {}
 ) {
+  const { zipName = 'slideshow-konten.zip', pixelRatio = 2, onProgress } = options;
   const zip = new JSZip();
   const folder = zip.folder('slides') || zip;
 
@@ -52,7 +71,7 @@ export async function exportAllSlidesToZip(
     const { element, filename } = slideElements[i];
     if (onProgress) onProgress(i + 1, total);
 
-    const dataUrl = await exportSlideElementToDataUrl(element, format);
+    const dataUrl = await exportSlideElementToDataUrl(element, format, { pixelRatio });
 
     // Convert dataUrl to blob/arrayBuffer for JSZip
     const base64Data = dataUrl.split(',')[1];

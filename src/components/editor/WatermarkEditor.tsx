@@ -41,7 +41,7 @@ export const WatermarkEditor: React.FC<WatermarkEditorProps> = ({ watermark, onC
               type="text"
               value={watermark.text}
               onChange={(e) => onChange({ ...watermark, text: e.target.value })}
-              placeholder="Misal: @kawan.toefl"
+              placeholder="Misal: Kawan TOEFL"
               className="neo-input py-1.5 text-xs font-semibold"
             />
           </div>
@@ -83,7 +83,7 @@ export const WatermarkEditor: React.FC<WatermarkEditorProps> = ({ watermark, onC
           />
 
           <div className="text-[11px] text-gray-700 bg-[#FFFBEB] p-2.5 rounded-lg border border-black shadow-[1px_1px_0_#000]">
-            💡 <strong>Petunjuk:</strong> Watermark posisi default di <em>bawah-tengah</em>. Anda dapat <strong>menggeser posisi watermark</strong> secara langsung di atas canvas slide!
+            <strong>Petunjuk:</strong> Watermark posisi default di <em>bawah-tengah</em>. Anda dapat <strong>menggeser posisi watermark</strong> secara langsung di atas canvas slide!
           </div>
         </div>
       )}
