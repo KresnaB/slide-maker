@@ -3,6 +3,8 @@
 import React from 'react';
 import {
   SlideData,
+  SlideElement,
+  TextElement,
   WatermarkConfig,
   ThemeConfig,
   AspectRatioPreset,
@@ -70,6 +72,10 @@ export const StaticSlide: React.FC<StaticSlideProps> = ({
             transform: elem.rotation ? `rotate(${elem.rotation}deg)` : undefined,
             transformOrigin: 'center',
             maxWidth: `${canvasWidth - 40}px`,
+            width:
+              elem.type === 'text' && (elem as TextElement).width
+                ? `${(elem as TextElement).width}px`
+                : undefined,
             boxSizing: 'border-box',
             padding: '4px',
           }}

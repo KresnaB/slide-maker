@@ -30,6 +30,7 @@ import {
   SlideElement,
   ThemeId,
   AspectRatioId,
+  AspectRatioPreset,
   WatermarkConfig,
 } from '@/types';
 
@@ -95,7 +96,17 @@ export default function Home() {
 
   // Generate slideshow from markdown text
   const handleGenerateFromMarkdown = (md: string) => {
-    const parsedSlides = parseMarkdownToSlides(md);
+    const ratio: AspectRatioPreset =
+      currentAspectRatioId === 'custom'
+        ? {
+            ...(ASPECT_RATIOS.find((r) => r.id === 'custom') || ASPECT_RATIOS[0]),
+            ratio: customWidth / customHeight,
+            width: customWidth,
+            height: customHeight,
+          }
+        : ASPECT_RATIOS.find((r) => r.id === currentAspectRatioId) || ASPECT_RATIOS[0];
+
+    const parsedSlides = parseMarkdownToSlides(md, ratio);
     if (parsedSlides.length === 0) {
       alert('Markdown tidak valid atau kosong. Harap periksa kembali.');
       return;

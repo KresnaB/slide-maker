@@ -1,10 +1,10 @@
 'use client';
 
-import React from 'react';
-import Draggable from 'react-draggable';
+import React, { useRef } from 'react';
 import {
   SlideData,
   SlideElement,
+  TextElement,
   WatermarkConfig,
   ThemeConfig,
   AspectRatioPreset,
@@ -21,6 +21,17 @@ interface SlideCanvasProps {
   onUpdateElementPosition: (id: string, x: number, y: number) => void;
   onUpdateWatermarkPosition: (x: number, y: number) => void;
 }
+
+interface DragState {
+  kind: 'element' | 'watermark';
+  id?: string;
+  startClientX: number;
+  startClientY: number;
+  startX: number; // persen
+  startY: number; // persen
+}
+
+const clampPct = (v: number, min = 3, max = 97) => Math.max(min, Math.min(max, v));
 
 export const SlideCanvas: React.FC<SlideCanvasProps> = ({
   slide,
@@ -39,6 +50,8 @@ export const SlideCanvas: React.FC<SlideCanvasProps> = ({
   // Skala dari resolusi desain (1080-based) ke preview
   const scale = canvasWidth / aspectRatio.width;
 
+  const dragRef = useRef<DragState | null>(null);
+
   const borderRadius =
     theme.id === 'neobrutalism'
       ? '24px'
@@ -48,12 +61,67 @@ export const SlideCanvas: React.FC<SlideCanvasProps> = ({
       ? '16px'
       : '6px';
 
+  const handleCanvasPointerMove = (e: React.PointerEvent) => {
+    const d = dragRef.current;
+    if (!d) return;
+    const dxPct = ((e.clientX - d.startClientX) / canvasWidth) * 100;
+    const dyPct = ((e.clientY - d.startClientY) / canvasHeight) * 100;
+    const newX = clampPct(d.startX + dxPct);
+    const newY = clampPct(d.startY + dyPct);
+    if (d.kind === 'element' && d.id) {
+      onUpdateElementPosition(d.id, newX, newY);
+    } else if (d.kind === 'watermark') {
+      onUpdateWatermarkPosition(newX, newY);
+    }
+  };
+
+  const handlePointerUp = () => {
+    dragRef.current = null;
+  };
+
+  const startElementDrag = (e: React.PointerEvent, elem: SlideElement) => {
+    e.stopPropagation();
+    onSelectElement(elem.id);
+    dragRef.current = {
+      kind: 'element',
+      id: elem.id,
+      startClientX: e.clientX,
+      startClientY: e.clientY,
+      startX: elem.x,
+      startY: elem.y,
+    };
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
+
+  const startWatermarkDrag = (e: React.PointerEvent) => {
+    e.stopPropagation();
+    dragRef.current = {
+      kind: 'watermark',
+      startClientX: e.clientX,
+      startClientY: e.clientY,
+      startX: watermark.x,
+      startY: watermark.y,
+    };
+    (e.currentTarget as HTMLElement).setPointerCapture?.(e.pointerId);
+  };
+
+  // Estimasi ukuran kartu watermark (design px) untuk centering presisi
+  const wmDesignW = Math.round(watermark.text.length * watermark.fontSize * 0.62 + 68);
+  const wmDesignH = Math.round(watermark.fontSize + 22);
+  const wmScaledW = wmDesignW * scale;
+  const wmScaledH = wmDesignH * scale;
+
   return (
     <div className="flex flex-col items-center justify-center w-full my-2">
       {/* Slide Canvas Outer Box */}
       <div
         id="slide-canvas-render"
-        onClick={() => onSelectElement(null)}
+        onClick={() => {
+          if (!dragRef.current) onSelectElement(null);
+        }}
+        onPointerMove={handleCanvasPointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerLeave={handlePointerUp}
         style={{
           width: `${canvasWidth}px`,
           height: `${canvasHeight}px`,
@@ -67,93 +135,83 @@ export const SlideCanvas: React.FC<SlideCanvasProps> = ({
           overflow: 'hidden',
           userSelect: 'none',
           boxSizing: 'border-box',
+          touchAction: 'none',
         }}
         className="transition-all duration-200 flex-shrink-0"
       >
         {/* SLIDE ELEMENTS */}
         {slide.elements.map((elem) => {
           const isSelected = selectedElementId === elem.id;
-
-          // Convert percentage coordinates (0-100%) to pixels inside preview canvas
           const posX = (elem.x / 100) * canvasWidth;
           const posY = (elem.y / 100) * canvasHeight;
 
           return (
-            <Draggable
+            <div
               key={elem.id}
-              position={{ x: posX, y: posY }}
-              onStop={(e, data) => {
-                const newXPercent = Math.max(3, Math.min(97, (data.x / canvasWidth) * 100));
-                const newYPercent = Math.max(3, Math.min(97, (data.y / canvasHeight) * 100));
-                onUpdateElementPosition(elem.id, newXPercent, newYPercent);
+              onPointerDown={(e) => startElementDrag(e, elem)}
+              style={{
+                position: 'absolute',
+                left: `${posX}px`,
+                top: `${posY}px`,
+                zIndex: elem.zIndex || 10,
+                cursor: 'grab',
+                margin: 0,
+                padding: '4px',
+                maxWidth: `${canvasWidth - 40}px`,
+                width:
+                  elem.type === 'text' && (elem as TextElement).width
+                    ? `${(elem as TextElement).width}px`
+                    : undefined,
+                boxSizing: 'border-box',
               }}
-              bounds="parent"
+              className={`transition-shadow ${
+                isSelected
+                  ? 'outline-2 outline-dashed outline-black bg-yellow-300/30 rounded shadow-[2px_2px_0_#000]'
+                  : 'hover:outline-1 hover:outline-dashed hover:outline-black/40'
+              }`}
             >
+              {/* Skala elemen dengan transform (bukan zoom) supaya drag 1:1 dengan kursor */}
               <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onSelectElement(elem.id);
-                }}
                 style={{
-                  position: 'absolute',
-                  zIndex: elem.zIndex || 10,
-                  cursor: 'grab',
-                  margin: 0,
-                  padding: '4px',
-                  maxWidth: `${canvasWidth - 40}px`,
-                  boxSizing: 'border-box',
-                  // Skala elemen (font/shape/icon) mengikuti preview
-                  zoom: scale,
+                  transform: `scale(${scale})`,
+                  transformOrigin: 'top left',
                 }}
-                className={`transition-shadow ${
-                  isSelected
-                    ? 'outline-2 outline-dashed outline-black bg-yellow-300/30 rounded shadow-[2px_2px_0_#000]'
-                    : 'hover:outline-1 hover:outline-dashed hover:outline-black/40'
-                }`}
               >
                 <div
                   style={{
-                    transform: elem.rotation
-                      ? `rotate(${elem.rotation}deg)`
-                      : undefined,
+                    transform: elem.rotation ? `rotate(${elem.rotation}deg)` : undefined,
                     transformOrigin: 'center',
                   }}
                 >
                   <ElementView element={elem} theme={theme} />
                 </div>
               </div>
-            </Draggable>
+            </div>
           );
         })}
 
         {/* WATERMARK ELEMENT (DRAGGABLE) */}
         {watermark.enabled && watermark.text && (
-          <Draggable
-            position={{
-              x: (watermark.x / 100) * canvasWidth - 90,
-              y: (watermark.y / 100) * canvasHeight - 16,
+          <div
+            onPointerDown={startWatermarkDrag}
+            style={{
+              position: 'absolute',
+              left: `${(watermark.x / 100) * canvasWidth - wmScaledW / 2}px`,
+              top: `${(watermark.y / 100) * canvasHeight - wmScaledH / 2}px`,
+              zIndex: 99,
+              cursor: 'grab',
             }}
-            onStop={(e, data) => {
-              const newX = Math.max(5, Math.min(95, ((data.x + 90) / canvasWidth) * 100));
-              const newY = Math.max(5, Math.min(95, ((data.y + 16) / canvasHeight) * 100));
-              onUpdateWatermarkPosition(newX, newY);
-            }}
-            bounds="parent"
+            title="Geser Watermark untuk memindahkan posisinya!"
           >
             <div
               style={{
-                position: 'absolute',
-                zIndex: 99,
-                cursor: 'grab',
-                // Skala watermark mengikuti preview
-                zoom: scale,
+                transform: `scale(${scale})`,
                 transformOrigin: 'top left',
               }}
-              title="Geser Watermark untuk memindahkan posisinya!"
             >
               <WatermarkView watermark={watermark} theme={theme} />
             </div>
-          </Draggable>
+          </div>
         )}
       </div>
 

@@ -66,6 +66,8 @@ export interface TextElement extends BaseElement {
   color: string;
   textAlign?: 'left' | 'center' | 'right';
   isHeading?: boolean;
+  /** Lebar eksplisit dalam px desain (biar layout deterministik & anti-overlap) */
+  width?: number;
 }
 
 export type ShapeType =

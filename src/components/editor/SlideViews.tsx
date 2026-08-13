@@ -96,6 +96,7 @@ export const ElementView: React.FC<{
           textAlign: text.textAlign || 'center',
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
+          overflowWrap: 'break-word',
           lineHeight: '1.3',
           width: '100%',
         }}
